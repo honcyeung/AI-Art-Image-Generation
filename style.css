@@ -1,0 +1,68 @@
+/* --- NEW: Import Font Awesome Icon Library --- */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+/* --- (Keep your other existing styles) --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+body { font-family: 'Inter', sans-serif; }
+.stImage > img {
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid #333;
+}
+.stImage > img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+.stButton > button {
+    border-radius: 8px;
+    border: 1px solid #555;
+    background-color: #262730;
+    color: #FAFAFA;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease-in-out;
+}
+.stButton > button:hover {
+    background-color: #4A4A5A;
+    color: #FFFFFF;
+    border-color: #777;
+}
+
+/* --- FINAL, ROBUST CSS FOR THE CENTERED "BACK TO TOP" BUTTON --- */
+.footer {
+    position: fixed;
+    bottom: 30px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.back-to-top, .back-to-top:link, .back-to-top:visited {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    font-size: 20px; /* Controls the icon size */
+    color: #FFFFFF !important;
+    background-color: rgba(40, 40, 50, 0.8);
+    backdrop-filter: blur(5px);
+    border: 1px solid #555;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    opacity: 0.6;
+    pointer-events: auto;
+}
+
+.back-to-top:hover {
+    opacity: 1;
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    background-color: rgba(70, 70, 80, 0.9);
+    color: #FFFFFF !important;
+}
