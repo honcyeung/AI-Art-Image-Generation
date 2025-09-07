@@ -148,12 +148,7 @@ def run_generate_pipeline(theme):
     
     system_prompts = get_prompt()
     prompt_concept = create_prompt_concept(system_prompts[0], theme)
-    print(prompt_concept)
-    print()
     initial_image_prompt = prompt_enhancer(prompt_concept, system_prompts[1])
-    print(initial_image_prompt["creative_concept"])
-    print()
-    print(initial_image_prompt["final_prompt"])
     images = generate_initial_image(initial_image_prompt["final_prompt"])
     
     return prompt_concept, initial_image_prompt, images

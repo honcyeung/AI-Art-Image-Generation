@@ -101,18 +101,22 @@ def main():
 
     for i, row in st.session_state.shuffled_list.iterrows():
         col = cols[i % len(cols)]
-        with col:
-            st.image(
-                row["thumbnails_public_url"],
-                caption = f"{row['prompt_concept']}",
-            )
+        with col: 
+            st.markdown(
+                f"""
+                    <a href="/details?images={row['images']}" target="_self">
+                        <img src="{row['thumbnails_public_url']}" alt="{row['prompt_concept']}">
+                    </a>
+                    """, unsafe_allow_html = True
+                )
 
     st.markdown("""
         <div class="footer">
             <a href="#top" class="back-to-top" title="Back to Top">
-                <i class="fa-solid fa-house-chimney"></i>
+                <i class="fa-solid fa-circle-chevron-up"></i>
             </a>
         </div>
     """, unsafe_allow_html = True)
+    
 if __name__ == "__main__":
     main()

@@ -4,6 +4,15 @@
 /* --- (Keep your other existing styles) --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 body { font-family: 'Inter', sans-serif; }
+
+[data-testid="stSidebar"] {
+    display: none;
+}
+
+.block-container {
+    padding-top: 3rem !important;
+}
+
 .stImage > img {
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
@@ -27,6 +36,19 @@ body { font-family: 'Inter', sans-serif; }
     background-color: #4A4A5A;
     color: #FFFFFF;
     border-color: #777;
+}
+
+.stTextArea [data-testid="stWidgetLabel"] {
+    font-size: 1.25rem; /* Make the label ("Final Prompt") bigger */
+    font-weight: 600;
+}
+.stTextArea textarea {
+    height: 250px !important; /* Give it a larger default height */
+    font-family: monospace;
+    background-color: #0E1117; /* Match Streamlit's dark code background */
+    color: #FAFAFA;
+    border: 1px solid #333;
+    border-radius: 8px;
 }
 
 /* --- FINAL, ROBUST CSS FOR THE CENTERED "BACK TO TOP" BUTTON --- */
