@@ -1,5 +1,5 @@
 # AI Artistry Pipeline: An Automated Generative Art Gallery
-<!-- Replace with your live app URL! -->
+[Infographic of this project](https://honcyeung.github.io/AI-Art-Image-Generation/)
 
 This project is a complete, end-to-end data engineering pipeline that automatically generates, processes, and displays unique AI art in a polished web gallery. It showcases a modern, cloud-native approach to building automated ETL processes and AI-powered applications.
 The creative engine of this project is a multi-stage LLM agent named '**The Alchemist**', which is tasked with generating "beyond imagination" art concepts based on the custom theme of "**Nocturne & Mechanism**".
