@@ -14,7 +14,7 @@
         - Architecture Diagram: Report Info -> Project Architecture -> Goal: Organize -> Viz: Flowchart (HTML/CSS) -> Interaction: Click to highlight stage description -> Justification: The most effective way to visualize a multi-step process for a technical audience.
         - Tech Stack: Report Info -> Technologies Used -> Goal: Inform -> Viz: Icon Grid (HTML/CSS) -> Interaction: None -> Justification: A simple, scannable grid is the clearest way to present a tech stack.
         - Creative Output: Report Info -> Generated Concepts -> Goal: Inform -> Viz: Interactive Text Block (JS) -> Interaction: Click button to cycle through examples -> Justification: An interactive list is more engaging than a static one.
-        - Technical Deep Dive: Report Info -> Prompt Engineering Strategy -> Goal: Explain -> Viz: Mini-flowchart (HTML/CSS) -> Interaction: None -> Justification: Visualizes the unique 'Alchemist' agent strategy, a key technical differentiator.
+        - Technical Deep Dive: Report Info -> Prompt Engineering Strategy -> Goal: Explain -> Viz: Thematic Diagram (HTML/CSS) -> Interaction: None -> Justification: A visually engaging, animated diagram better explains the 'Alchemist' agent's transformative process.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -64,18 +64,45 @@
             font-size: 3rem;
             color: #9CA3AF; /* Lighter Gray */
         }
-        .mini-flow-step {
-            background-color: #0B1120;
+        
+        /* --- ALCHEMIST DIAGRAM STYLES --- */
+        .alchemist-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background-color: #1F2937;
             border: 1px solid #4B5563;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .alchemist-icon {
+            font-size: 1.5rem;
+            color: #06B6D4; /* Accent Cyan */
+            width: 40px;
+            text-align: center;
+        }
+        .alchemist-text .title {
             font-weight: 600;
+            color: #E0E0E0;
         }
-        .mini-flow-arrow {
-            color: #6B7280;
-            font-weight: bold;
+        .alchemist-text .desc {
+            font-size: 0.875rem;
+            /* FIX: Brighter text for description in diagram */
+            color: #D1D5DB; 
         }
+        .alchemist-connector {
+            width: 2px;
+            height: 30px;
+            background-color: #4B5563;
+            margin-left: 20px; /* Aligns with the icon center */
+        }
+        /* --- FIX: INCREASED TEXT BRIGHTNESS --- */
+        .dim-text {
+            /* Brighter Gray: Tailwind gray-300 for much better readability */
+            color: #D1D5DB; 
+        }
+
     </style>
 </head>
 <body class="antialiased">
@@ -91,7 +118,6 @@
         <section id="architecture" class="mb-12 md:mb-16">
             <h2 class="text-3xl md:text-4xl header-font text-center mb-8 text-gray-100">Project Architecture</h2>
             
-            <!-- NEW ROBUST FLOWCHART LAYOUT -->
             <div id="flowchart" class="grid grid-cols-1 md:grid-cols-5 gap-6 text-sm md:text-base">
                 <div class="flowchart-node active" data-step="1">
                     <div class="font-bold text-lg">①</div>
@@ -127,34 +153,56 @@
             <h2 class="text-3xl md:text-4xl header-font text-center mb-8 text-gray-100">Technology Stack</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 text-center">
                 <div class="flex flex-col items-center"><div class="tech-icon">☁️</div><span class="mt-2 font-semibold">GCP</span></div>
-                <div class="flex flex-col items-center"><div class="tech-icon">🗃️</div><span class="mt-2 font-semibold">BigQuery</span></div>
-                <div class="flex flex-col items-center"><div class="tech-icon">📦</div><span class="mt-2 font-semibold">GCS</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">🔍</div><span class="mt-2 font-semibold">BigQuery</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">🗂️</div><span class="mt-2 font-semibold">GCS</span></div>
                 <div class="flex flex-col items-center"><div class="tech-icon">🧠</div><span class="mt-2 font-semibold">Gemini API</span></div>
                 <div class="flex flex-col items-center"><div class="tech-icon">🐍</div><span class="mt-2 font-semibold">Python</span></div>
-                <div class="flex flex-col items-center"><div class="tech-icon">📊</div><span class="mt-2 font-semibold">Streamlit</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">🚀</div><span class="mt-2 font-semibold">Streamlit</span></div>
             </div>
         </section>
 
         <!-- Details Section -->
-        <section id="details" class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 md:mt-16">
+        <section id="details" class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 md:mb-16">
             <!-- Technical Deep Dive Card -->
             <div class="card p-6 flex flex-col">
                 <h3 class="text-2xl header-font mb-4 text-gray-100 text-center">Technical Deep Dive</h3>
-                <p class="text-gray-400 mb-6 text-center">The core of this project is the **'Alchemist' Agent**, a custom multi-stage prompting strategy designed to ensure originality.</p>
-                <div class="space-y-4">
-                    <div class="mini-flow-step">1. Purification: Identify & avoid clichés for the master theme.</div>
-                    <div class="text-center mini-flow-arrow text-2xl">↓</div>
-                    <div class="mini-flow-step">2. Catalyst: Secretly fuse the theme with a random, unrelated concept.</div>
-                     <div class="text-center mini-flow-arrow text-2xl">↓</div>
-                    <div class="mini-flow-step">3. Transmutation: Generate a structured JSON output with the new, hybrid prompt and creative reasoning.</div>
+                <p class="dim-text mb-6 text-center">The core of this project is "The Alchemist" AI Agent, a custom multi-stage prompting strategy designed to ensure originality.</p>
+                
+                <!-- NEW Alchemist Diagram -->
+                <div class="flex-grow flex flex-col justify-center space-y-2">
+                    <!-- Step 1 -->
+                    <div class="alchemist-step">
+                        <div class="alchemist-icon">✨</div>
+                        <div class="alchemist-text">
+                            <div class="title">1. Purification</div>
+                            <div class="desc">Identify & avoid clichés for the master theme.</div>
+                        </div>
+                    </div>
+                    <div class="alchemist-connector"></div>
+                    <!-- Step 2 -->
+                    <div class="alchemist-step">
+                        <div class="alchemist-icon">🧪</div>
+                        <div class="alchemist-text">
+                            <div class="title">2. Catalyst</div>
+                            <div class="desc">Fuse theme with a random, unrelated concept.</div>
+                        </div>
+                    </div>
+                    <div class="alchemist-connector"></div>
+                    <!-- Step 3 -->
+                    <div class="alchemist-step">
+                        <div class="alchemist-icon">🪄</div>
+                        <div class="alchemist-text">
+                            <div class="title">3. Transmutation</div>
+                            <div class="desc">Generate a structured JSON output with the new prompt.</div>
+                        </div>
+                    </div>
                 </div>
-                 <p class="text-gray-300 mt-6 text-sm">This method systematically prevents repetitive or generic outputs, ensuring every generated concept is novel and imaginative.</p>
             </div>
 
             <!-- Creative Output Card -->
             <div class="card p-6 flex flex-col">
                 <h3 class="text-2xl header-font mb-4 text-gray-100 text-center">Creative Output</h3>
-                <p class="text-gray-400 mb-4 text-center">Example concepts generated by 'The Alchemist' from the "Nocturne & Mechanism" theme.</p>
+                <p class="dim-text mb-4 text-center">Example concepts generated by "The Alchemist".</p>
                 <div class="flex-grow p-6 bg-gray-900 border border-gray-700 rounded-lg flex items-center justify-center text-center min-h-[100px]">
                     <p id="concept-display" class="text-2xl font-semibold text-cyan-400"></p>
                 </div>
@@ -169,11 +217,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const stepDescriptions = {
-                1: { title: 'Step 1: Creative Genesis', text: 'The pipeline begins by prompting a powerful LLM agent ("The Alchemist") with a master theme. The agent generates a unique two-word concept and enhances it into a detailed, structured JSON object containing a final prompt and creative reasoning.' },
+                1: { title: 'Step 1: Brainstorm Ideas', text: 'The pipeline begins by prompting a powerful LLM agent "The Alchemist" with a master theme. The agent generates a unique two-word concept and enhances it into a detailed, structured JSON object containing a final prompt and creative reasoning.' },
                 2: { title: 'Step 2: AI Image Generation', text: 'The structured final prompt is sent to the Gemini Imagen model, which generates a pair of high-resolution, thematically consistent art pieces. The output is a set of raw image bytes and metadata.' },
                 3: { title: 'Step 3: Cloud ETL', text: 'A Python script processes the generated assets. It creates high-quality thumbnails, consolidates JSON metadata into an optimized NDJSON file, and uploads all assets (images, thumbnails, JSON) to specific folders in Google Cloud Storage.' },
-                4: { title: 'Step 4: Data Warehousing', text: 'The staged NDJSON file in GCS is loaded into a primary BigQuery table. A final, enriched table is then created, containing public URLs to all GCS assets. This table serves as the single source of truth for the web app.' },
-                5: { title: 'Step 5: Presentation Layer', text: 'A multi-page Streamlit application queries the final BigQuery table to get all metadata. It dynamically displays a shuffled gallery of thumbnails, which link to detail pages showing the full-size art and the AI\'s creative process.' }
+                4: { title: 'Step 4: Data Warehousing', text: 'The staged NDJSON file in GCS is loaded into a primary BigQuery table. A final, enriched table is then created, containing URLs to all GCS assets. This table serves as the single data source for the web app.' },
+                5: { title: 'Step 5: Web App', text: 'A multi-page Streamlit application queries the final BigQuery table to get all metadata. It dynamically displays a shuffled gallery of thumbnails, which link to detail pages showing the full-size art and the AI\'s creative process.' }
             };
 
             const flowchartNodes = document.querySelectorAll('.flowchart-node');
@@ -196,7 +244,7 @@
             
             function shuffleConcept() {
                 const randomIndex = Math.floor(Math.random() * concepts.length);
-                conceptDisplayEl.textContent = `"${concepts[randomIndex]}"`;
+                conceptDisplayEl.textContent = `${concepts[randomIndex]}`;
             }
 
             shuffleConceptBtn.addEventListener('click', shuffleConcept);
