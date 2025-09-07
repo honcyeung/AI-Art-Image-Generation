@@ -6,14 +6,6 @@ from google.genai import types
 import io
 import json
 
-TEMPERATURE = 0.9
-GEMINI_TEXT_MODEL = "gemini-2.5-flash-lite" 
-# GEMINI_TEXT_MODEL = "gemini-2.5-flash" 
-GEMINI_IMAGE_MODEL = "imagen-3.0-generate-002"
-# GEMINI_IMAGE_MODEL = "imagen-4.0-ultra-generate-001"
-IMAGE_PATH = "./images/"
-NUMBER_OF_IMAGES = 2
-
 load_dotenv()
 PROMPTLAYER_API_KEY = os.environ["PROMPTLAYER_API_KEY"]
 PROMPT_TEMPLATE_IDENTIFIER = os.environ["PROMPT_TEMPLATE_IDENTIFIER"]
@@ -25,6 +17,19 @@ client = genai.Client(api_key = GEMINI_API_KEY)
 vertext_client = genai.Client(
     vertexai = True, project = PROJECT_ID, location = LOCATION
     )
+
+def read_theme():
+    """Pre-defined theme for generating the 2-word concept for image generations."""
+
+    try:
+        with open("theme.txt", "r") as f:
+            theme = f.read().strip()
+            
+            return theme
+    except Exception as e:
+        print(f"Error reading theme: {e}")
+
+        return "digital art of a futuristic cityscape"
 
 def get_prompt():
   
@@ -51,15 +56,16 @@ def get_prompt():
 
     return system_prompts
 
-def create_prompt_concept(prompt, theme):
+def create_prompt_concept(prompt, theme, gemini_text_model, temperature):
+    """Initial concept for prompt inspirations."""
 
     formatted_prompt = prompt.format(theme = theme)
     try:
         response = client.models.generate_content(
-            model = GEMINI_TEXT_MODEL,
+            model = gemini_text_model,
             contents = formatted_prompt,
             config = types.GenerateContentConfig(
-            temperature = TEMPERATURE, 
+            temperature = temperature, 
         )
     )
         if response.text:
@@ -73,7 +79,8 @@ def create_prompt_concept(prompt, theme):
 
         return
 
-def prompt_enhancer(prompt_concept, system_prompt):
+def prompt_enhancer(prompt_concept, system_prompt, gemini_text_model, temperature):
+    """Enrich the image generation prompt by including more details and requirements."""
 
     if not prompt_concept:
         print("No prompt concept provided for enhancement.")
@@ -93,11 +100,11 @@ def prompt_enhancer(prompt_concept, system_prompt):
         }
 
         response = client.models.generate_content(
-            model = GEMINI_TEXT_MODEL,
+            model = gemini_text_model,
             contents = prompt_concept,
             config = types.GenerateContentConfig(
             system_instruction = system_prompt,
-            temperature = TEMPERATURE, 
+            temperature = temperature, 
             response_mime_type = "application/json",
             response_schema = response_schema
         )
@@ -120,16 +127,15 @@ def prompt_enhancer(prompt_concept, system_prompt):
 
         return
     
-def generate_initial_image(prompt, number_of_images = NUMBER_OF_IMAGES):
+def generate_image(prompt, gemini_image_model, number_of_images, aspect_ratio):
 
     try:
         response = vertext_client.models.generate_images(
-            model = GEMINI_IMAGE_MODEL,
+            model = gemini_image_model,
             prompt = prompt,
             config = types.GenerateImagesConfig(
                 number_of_images = number_of_images,
-                # aspect_ratio = "1:1",
-                # output_mime_type = 'image/jpeg',
+                aspect_ratio = aspect_ratio,
             )
         )
 
@@ -144,11 +150,12 @@ def generate_initial_image(prompt, number_of_images = NUMBER_OF_IMAGES):
 
         return
 
-def run_generate_pipeline(theme):
+def run_generate_pipeline(gemini_text_model, gemini_image_model, temperature, number_of_images, aspect_ratio):
     
+    theme = read_theme()
     system_prompts = get_prompt()
-    prompt_concept = create_prompt_concept(system_prompts[0], theme)
-    initial_image_prompt = prompt_enhancer(prompt_concept, system_prompts[1])
-    images = generate_initial_image(initial_image_prompt["final_prompt"])
+    prompt_concept = create_prompt_concept(system_prompts[0], theme, gemini_text_model, temperature)
+    initial_image_prompt = prompt_enhancer(prompt_concept, system_prompts[1], gemini_text_model, temperature)
+    images = generate_image(initial_image_prompt["final_prompt"], gemini_image_model, number_of_images, aspect_ratio)
     
     return prompt_concept, initial_image_prompt, images

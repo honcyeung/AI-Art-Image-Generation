@@ -4,6 +4,7 @@ from google.cloud import storage, bigquery
 from dotenv import load_dotenv
 import json
 import pandas as pd
+from PIL import Image
 
 load_dotenv()
 PROJECT_ID = os.environ["PROJECT_ID"]
@@ -57,6 +58,7 @@ def flatten_json(filepath):
         return
 
 def convert_to_ndjson(input_filepath, output_filepath, output_file):
+    """ndjson is the best format to load from json to bigquery"""
 
     try:
         output_file = os.path.join(output_filepath, output_file)
@@ -121,7 +123,7 @@ def load_ndjson_from_gcs_to_bigquery(output_filepath, gcp_destination_folder = "
         load_job.result() 
 
         destination_table = client.get_table(table_ref)
-        print(f"Job finished. Loaded {destination_table.num_rows} rows.")
+        print(f"--- Job finished. Loaded {destination_table.num_rows} rows. ---")
 
     except Exception as e:
         print(f"Error loading ndjson to BigQuery: {e}")
@@ -143,7 +145,7 @@ def create_thumbnails(image_path, thumbnail_path, size = (256, 256)):
             with Image.open(file) as img:
                 img.thumbnail(size)
                 img.save(os.path.join(thumbnail_path, thumbnail_filename))
-            print(f"Successfully created thumbnail: {thumbnail_filename}")
+        print(f"--- Successfully created {len(file_paths)} thumbnails. ---")
 
     except Exception as e:
         print(f"Error: {e}")
@@ -200,7 +202,7 @@ def load_df_to_bigquery(df):
         load_job.result() 
 
         destination_table = client.get_table(table_ref)
-        print(f"Job finished. Loaded {destination_table.num_rows} rows.")
+        print(f"--- Job finished. Loaded {destination_table.num_rows} rows. ---")
     except Exception as e:
         print(f"Error loading dataframe to BigQuery: {e}")
 
@@ -209,12 +211,12 @@ def load_df_to_bigquery(df):
 def run_upload_pipeline(image_path, prompt_path, output_ndjson_path, output_ndjson_file, thumbnail_path):
 
     flattened_data_list = convert_to_ndjson(prompt_path, output_ndjson_path, output_ndjson_file)
-    # create_thumbnails(image_path, thumbnail_path)
+    create_thumbnails(image_path, thumbnail_path)
     df = create_public_urls(image_path, flattened_data_list)
 
     # upload to Google Cloud
-    # upload_to_gcp_bucket(image_path, "png", "images")
-    # upload_to_gcp_bucket(prompt_path, "json", "prompts")
-    # upload_to_gcp_bucket(thumbnail_path, "png", "thumbnails")
-    # load_ndjson_from_gcs_to_bigquery(output_ndjson_path, gcp_destination_folder = "ndjson_prompt", gcp_destination_file = output_ndjson_file)
+    upload_to_gcp_bucket(image_path, "png", "images")
+    upload_to_gcp_bucket(prompt_path, "json", "prompts")
+    upload_to_gcp_bucket(thumbnail_path, "png", "thumbnails")
+    load_ndjson_from_gcs_to_bigquery(output_ndjson_path, gcp_destination_folder = "ndjson_prompt", gcp_destination_file = output_ndjson_file)
     load_df_to_bigquery(df)

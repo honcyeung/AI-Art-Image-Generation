@@ -29,10 +29,10 @@ body {
 /* Target h1 elements specifically within the main block container */
 .block-container h1 {
     font-family: 'Zen Dots', sans-serif !important;
-    font-size: 3.25rem !important;
+    font-size: 4.25rem !important;
     font-weight: 400 !important; /* This font looks best at normal weight */
     text-transform: uppercase;
-    letter-spacing: 8px !important;
+    letter-spacing: 40px !important;
     padding-bottom: 0.5rem;
 }
 

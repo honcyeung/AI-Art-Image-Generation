@@ -13,25 +13,21 @@ PROMPT_PATH = "./prompts/"
 OUTPUT_NDJSON_PATH = "./ndjson_prompt/"
 OUTPUT_NDJSON_FILE = "ndjson_prompts.json"
 THUMBNAIL_PATH = "./thumbnails/"
-UNIQUE_CONCEPT = 1
 
-def read_theme():
+GEMINI_TEXT_MODEL = "gemini-2.5-flash-lite" 
+# GEMINI_IMAGE_MODEL = "imagen-3.0-generate-002"
+GEMINI_IMAGE_MODEL = "imagen-4.0-ultra-generate-001"
 
-    try:
-        with open("theme.txt", "r") as f:
-            theme = f.read().strip()
-            
-            return theme
-    except Exception as e:
-        print(f"Error reading theme: {e}")
-
-        return "digital art of a futuristic cityscape"
+TEMPERATURE = 1
+NUMBER_OF_IMAGES = 2
+ASPECT_RATIO = "3:4" # "1:1", "3:4", "4:3", "9:16", and "16:9". Default "1:1"
+UNIQUE_CONCEPT = 0 # same concept may have more than 1 image; 0 to show all images, 1 to show 1 image per concept
 
 def main():
 
-    # prompt_concept, initial_image_prompt, images = generate.run_generate_pipeline(theme = read_theme())
-    # save_display.run_save_and_display_pipeline(prompt_concept, initial_image_prompt, images)
-    # upload.run_upload_pipeline(IMAGE_PATH, PROMPT_PATH, OUTPUT_NDJSON_PATH, OUTPUT_NDJSON_FILE, THUMBNAIL_PATH)
+    prompt_concept, initial_image_prompt, images = generate.run_generate_pipeline(GEMINI_TEXT_MODEL, GEMINI_IMAGE_MODEL, TEMPERATURE, NUMBER_OF_IMAGES, ASPECT_RATIO)
+    save_display.run_save_and_display_pipeline(prompt_concept, initial_image_prompt, images)
+    upload.run_upload_pipeline(IMAGE_PATH, PROMPT_PATH, OUTPUT_NDJSON_PATH, OUTPUT_NDJSON_FILE, THUMBNAIL_PATH)
 
     # Streamlit app
     command = [sys.executable, "-m", "streamlit", "run", "gallery.py", "--", f"--unique_concept={UNIQUE_CONCEPT}"]

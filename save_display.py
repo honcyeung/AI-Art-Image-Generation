@@ -20,6 +20,7 @@ def create_unique_filename(prompt_concept):
     return filename
 
 def create_filename_prefix(prompt_concept):
+    """Make sure same set of files have the same file name prefix."""
 
     current_time = datetime.now().strftime("%Y%m%d")
     concept_slug = prompt_concept.replace(" ", "-").lower()

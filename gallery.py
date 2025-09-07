@@ -6,20 +6,13 @@ from dotenv import load_dotenv
 from google.cloud import storage, bigquery
 import random
 import argparse
+import numpy as np
 
 load_dotenv()
 PROJECT_ID = os.environ["PROJECT_ID"]
 GCP_BUCKET_NAME = os.environ["GCP_BUCKET_NAME"]
 BIGQUERY_DATASET_ID = os.environ["BIGQUERY_DATASET_ID"]
 BIGQUERY_TABLE_ID2 = os.environ["BIGQUERY_TABLE_ID2"]
-
-def parse_args():
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--unique_concept", type = str, default = 0)
-    args, _ = parser.parse_known_args()
-
-    return args
 
 def load_custom_css():
 
@@ -36,15 +29,14 @@ def fetch_gallery_metadata():
 
     table_ref = f"{BIGQUERY_DATASET_ID}.{BIGQUERY_TABLE_ID2}"
     query = f"""
-            SELECT *
+            SELECT prompt_concept, images, thumbnails_public_url
             FROM `{table_ref}`
-            ORDER BY id    
             """
 
     try:
         client = bigquery.Client(project = PROJECT_ID)
         df = client.query(query).to_dataframe()
-        print(f"Successfully fetched {len(df)} records.")
+        print(f"--- Successfully fetched {len(df)} records. ---")
 
         return df
     except Exception as e:
@@ -52,16 +44,39 @@ def fetch_gallery_metadata():
 
         return pd.DataFrame()
 
+def parse_args():
+    """Get the argument to show 1 image only for each concept"""
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--unique_concept", type = str, default = "0")
+    args, _ = parser.parse_known_args()
+
+    return args
+
+def show_images_with_unique_concept(df):
+
+    unique_concept = parse_args().unique_concept
+    if unique_concept in ["1", "True", "true", True]:
+        df = df.groupby(['id', 'prompt_concept', 'creative_concept', 'final_prompt'], as_index = False).agg({
+            'images': 'min',
+            'images_public_url': 'min',
+            'thumbnails': 'min',
+            'thumbnails_public_url': 'min'
+        })
+
+    return df
+
 def shuffle_dataframe(df):
+    """Shuffle the df by concept"""
 
     unique_concepts = df['prompt_concept'].unique()
     random.shuffle(unique_concepts)
     
     shuffled_df = pd.DataFrame()
     for concept in unique_concepts:
-        pair_df = df[df['prompt_concept'] == concept]
-        shuffled_pair_df = pair_df.sample(frac = 1)
-        shuffled_df = pd.concat([shuffled_df, shuffled_pair_df])
+        group_df = df[df['prompt_concept'] == concept]
+        shuffled_group_df = group_df.sample(frac = 1) # further shuffling within group
+        shuffled_df = pd.concat([shuffled_df, shuffled_group_df])
 
     return shuffled_df
 
@@ -83,7 +98,6 @@ def main():
     # Add a title and an introduction
     with st.container():
         st.title("AI Artistry Gallery")
-        st.markdown("An automated pipeline that generates unique concepts and visualizes them using AI.")
         st.divider()
 
     # Fetch the data from BigQuery
@@ -94,24 +108,17 @@ def main():
 
         return
 
-    # Same concept may have more than 1 image; if "1", choose 1 image for each concept only
-    unique_concept = parse_args().unique_concept
-    if unique_concept == "1":
-        df = df.groupby(['id', 'prompt_concept', 'creative_concept', 'final_prompt'], as_index = False).agg({
-            'images': 'min',
-            'images_public_url': 'min',
-            'thumbnails': 'min',
-            'thumbnails_public_url': 'min'
-        })
+    # Same concept may have more than 1 image; if "1" or True, choose 1 image for each concept only
+    df = show_images_with_unique_concept(df)
 
     # If not, we shuffle it once and store it in the session state.
     if 'shuffled_list' not in st.session_state:
         print("Shuffling data...")
         st.session_state.shuffled_list = shuffle_dataframe(df)
     
-    if st.button("Shuffle Gallery", type = "primary"):
     # Delete the old list from the session state. On the next re-run,
     # the 'if' block above will trigger again, creating a new shuffled list.
+    if st.button("Shuffle Gallery", type = "primary"):
         del st.session_state.shuffled_list
         st.rerun()
 
