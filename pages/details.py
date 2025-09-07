@@ -59,6 +59,7 @@ def main():
     with col_title:
         st.title(image_data['prompt_concept'])
     with col_button:
+        st.markdown("<div class='back-button-container'>", unsafe_allow_html = True)
         if st.button("Back to Gallery"):
             st.switch_page("gallery.py")
     st.divider()
@@ -66,11 +67,14 @@ def main():
     col1, col2 = st.columns([2, 3]) 
     with col1:
         st.image(image_data["images_public_url"])
+
     with col2:
+        st.subheader("Creative Reasoning by AI")
+        st.info(f"{image_data['creative_concept']}")
         st.text_area(
             "Final Prompt",
             value = image_data['final_prompt'],
-            height = 1000,
+            height = 400,
             key = "final_prompt_textarea" # Give it a key for CSS targeting
         )
 

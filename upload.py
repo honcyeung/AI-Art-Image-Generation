@@ -128,7 +128,7 @@ def load_ndjson_from_gcs_to_bigquery(output_filepath, gcp_destination_folder = "
 
         return
 
-def create_thumbnail(image_path, thumbnail_path, size = (256, 256)):
+def create_thumbnails(image_path, thumbnail_path, size = (256, 256)):
 
     try:
         file_paths = glob.glob(os.path.join(image_path, "*.png"))
@@ -137,7 +137,6 @@ def create_thumbnail(image_path, thumbnail_path, size = (256, 256)):
 
             return
         
-        thumbnail_filenames = []
         for file in file_paths:
             basenames = os.path.basename(file).split(".")
             thumbnail_filename = f"{basenames[0]}_thumbnail.{basenames[1]}"
@@ -145,69 +144,30 @@ def create_thumbnail(image_path, thumbnail_path, size = (256, 256)):
                 img.thumbnail(size)
                 img.save(os.path.join(thumbnail_path, thumbnail_filename))
             print(f"Successfully created thumbnail: {thumbnail_filename}")
-            thumbnail_filenames.append(thumbnail_filename)
 
-        return thumbnail_filenames
     except Exception as e:
         print(f"Error: {e}")
 
         return
 
-# new parts
+def create_public_urls(image_path, data_list):
 
-def fetch_image_metadata():
+    image_paths = glob.glob(os.path.join(image_path, '*.png'))
+    image_paths = [os.path.basename(path) for path in image_paths]
+    df_images = pd.DataFrame(image_paths, columns = ["images"])
+    df_images["id"] = df_images["images"].str.split("_").str[:2].str.join("_")
+    df = pd.DataFrame(data_list)
+    df_images = df_images.merge(df, how = "left", on = "id")
+    df2 = df_images[["id", "prompt_concept", "creative_concept", "final_prompt", "images"]]
 
-    table_ref = f"{BIGQUERY_DATASET_ID}.{BIGQUERY_TABLE_ID}"
-    query = f"""
-            SELECT 
-            id, prompt_concept, creative_concept, final_prompt
-            FROM `{table_ref}`
-            ORDER BY id    
-            """
-    
-    try:
-        client = bigquery.Client(project = PROJECT_ID)
-        df = client.query(query).to_dataframe()
-        print(f"Successfully fetched {len(df)} records.")
+    url = f"https://storage.googleapis.com/{GCP_BUCKET_NAME}/images/"
+    df2["images_public_url"] = url + df2["images"]
 
-        return df
-    except Exception as e:
-        st.error(f"Failed to connect to BigQuery. Please check your GCP authentication. Error: {e}")
+    df2["thumbnails"] = df2["images"].str.replace(".png", "_thumbnail.png")
+    url = f"https://storage.googleapis.com/{GCP_BUCKET_NAME}/thumbnails/"
+    df2["thumbnails_public_url"] = url + df2["thumbnails"]
 
-        return pd.DataFrame()
-
-def list_blobs_with_prefix(folder_name):
-
-    try:
-        storage_client = storage.Client(project = PROJECT_ID)
-        blobs = storage_client.list_blobs(GCP_BUCKET_NAME, prefix = folder_name)
-        filenames = [os.path.basename(blob.name) for blob in blobs]
-
-        return filenames
-    except Exception as e:
-        print(f"Error :{e}")
-
-        return
-
-def create_image_public_url(df, list_of_files, name = "images"):
-
-    df_files = pd.DataFrame(list_of_files, columns = [name])
-    df_files["id"] = df_files[name].str.split("_").str[:2].str.join("_")
-    df2 = df.merge(df_files, on = "id")
-
-    url = f"https://storage.googleapis.com/{GCP_BUCKET_NAME}/{name}/"
-    df2[f"{name}_public_url"] = url + df2[name]
-
-    return df2
-
-def create_thumbnail_public_url(df, list_of_files, name = "thumbnails"):
-
-    df_files = pd.DataFrame(list_of_files, columns = [name])
-    df_files["images"] = df_files[name].str.replace("_thumbnail.png", ".png")
-    df2 = df.merge(df_files, on = "images")
-
-    url = f"https://storage.googleapis.com/{GCP_BUCKET_NAME}/{name}/"
-    df2[f"{name}_public_url"] = url + df2[name]
+    df2 = df2.sort_values("id")
 
     return df2
 
@@ -248,19 +208,13 @@ def load_df_to_bigquery(df):
 
 def run_upload_pipeline(image_path, prompt_path, output_ndjson_path, output_ndjson_file, thumbnail_path):
 
+    flattened_data_list = convert_to_ndjson(prompt_path, output_ndjson_path, output_ndjson_file)
+    # create_thumbnails(image_path, thumbnail_path)
+    df = create_public_urls(image_path, flattened_data_list)
+
+    # upload to Google Cloud
     # upload_to_gcp_bucket(image_path, "png", "images")
     # upload_to_gcp_bucket(prompt_path, "json", "prompts")
-    # flattened_data_list = convert_to_ndjson(prompt_path, output_ndjson_path, output_ndjson_file)
-    # load_ndjson_from_gcs_to_bigquery(output_ndjson_path, gcp_destination_folder = "ndjson_prompt", gcp_destination_file = output_ndjson_file)
-    # thumbnail_filenames = create_thumbnail(image_path, thumbnail_path)
     # upload_to_gcp_bucket(thumbnail_path, "png", "thumbnails")
-
-
-    # need to fix the silly df to bigquery problem
-
-    df = fetch_image_metadata()
-    image_names = list_blobs_with_prefix("images")
-    thumbnail_names = list_blobs_with_prefix("thumbnails")
-    df2 = create_image_public_url(df, image_names)
-    df3 = create_thumbnail_public_url(df2, thumbnail_names)
-    load_df_to_bigquery(df3)
+    # load_ndjson_from_gcs_to_bigquery(output_ndjson_path, gcp_destination_folder = "ndjson_prompt", gcp_destination_file = output_ndjson_file)
+    load_df_to_bigquery(df)

@@ -105,5 +105,3 @@ def run_save_and_display_pipeline(prompt_concept, initial_image_prompt, images):
     
     filenames = name_and_save_files(prompt_concept, initial_image_prompt, images)
     display_images_side_by_side(filenames)
-
-    return filenames

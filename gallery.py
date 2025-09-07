@@ -5,12 +5,21 @@ import pandas as pd
 from dotenv import load_dotenv
 from google.cloud import storage, bigquery
 import random
+import argparse
 
 load_dotenv()
 PROJECT_ID = os.environ["PROJECT_ID"]
 GCP_BUCKET_NAME = os.environ["GCP_BUCKET_NAME"]
 BIGQUERY_DATASET_ID = os.environ["BIGQUERY_DATASET_ID"]
 BIGQUERY_TABLE_ID2 = os.environ["BIGQUERY_TABLE_ID2"]
+
+def parse_args():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--unique_concept", type = str, default = 0)
+    args, _ = parser.parse_known_args()
+
+    return args
 
 def load_custom_css():
 
@@ -84,6 +93,16 @@ def main():
         st.stop()
 
         return
+
+    # Same concept may have more than 1 image; if "1", choose 1 image for each concept only
+    unique_concept = parse_args().unique_concept
+    if unique_concept == "1":
+        df = df.groupby(['id', 'prompt_concept', 'creative_concept', 'final_prompt'], as_index = False).agg({
+            'images': 'min',
+            'images_public_url': 'min',
+            'thumbnails': 'min',
+            'thumbnails_public_url': 'min'
+        })
 
     # If not, we shuffle it once and store it in the session state.
     if 'shuffled_list' not in st.session_state:

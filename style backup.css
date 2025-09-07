@@ -1,0 +1,160 @@
+[data-testid="stSidebar"] {
+    display: none;
+}
+
+/* --- NEW: Import Font Awesome Icon Library --- */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+/* NEW: Artistic & Futuristic font for the page title */
+/* @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Anta&family=Audiowide&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+body { font-family: 'Inter', sans-serif; }
+
+.block-container {
+    padding-top: 3rem !important;
+}
+
+div[data-testid="stHorizontalBlock"] {
+    align-items: stretch !important;
+}
+/* This makes the right column a flex container, which allows us to stretch its contents. */
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+}
+/* FIX: This makes the container for the text area stretch to fill remaining space */
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-of-type(2) div[data-testid="stTextArea"] {
+    flex-grow: 1;
+}
+/* FIX: And this makes the actual textarea element inside it also stretch */
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-of-type(2) div[data-testid="stTextArea"] textarea {
+    flex-grow: 1;
+}
+/* FIX: This pulls the first subheader up to align with the image top */
+div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:nth-of-type(2) h2:first-of-type {
+    margin-top: -0.75rem;
+}
+
+div.st-emotion-cache-16txtl3 {
+    display: flex;
+    align-items: stretch; /* Force columns to be equal height */
+}
+
+/* Wrapper to help vertically align the back button */
+.back-button-container {
+    padding-top: 1.25rem;
+}
+
+/* --- Information Hierarchy --- */
+h1 {
+    font-family: "Audiowide", sans-serif !important;
+    font-size: 3.5rem !important; /* Make it larger and more impactful */
+    font-weight: 600 !important;
+    text-transform: uppercase; /* Gives a classic title feel */
+    letter-spacing: 4px !important; /* Increases space between letters */
+    padding-bottom: 1rem;
+}
+
+h2 { /* Targets st.subheader */
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.stImage > img {
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid #333;
+}
+.stImage > img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+.stButton > button {
+    border-radius: 8px;
+    border: 1px solid #555;
+    background-color: #262730;
+    color: #FAFAFA;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease-in-out;
+}
+.stButton > button:hover {
+    background-color: #4A4A5A;
+    color: #FFFFFF;
+    border-color: #777;
+}
+
+.stTextArea [data-testid="stMarkdownContainer"] {
+    font-size: 1.2rem; /* Make the label ("Final Prompt") bigger */
+    font-weight: 600;
+}
+
+.stTextArea textarea {
+    height: 250px !important; /* Give it a larger default height */
+    font-family: monospace;
+    background-color: #0E1117; /* Match Streamlit's dark code background */
+    color: #FAFAFA;
+    border: 1px solid #333;
+    border-radius: 8px;
+}
+
+div[data-testid="stTextArea"] {
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+div[data-testid="stTextArea"] textarea {
+    flex-grow: 1;
+}
+
+.stInfo { /* Style the 'Creative Reasoning' box */
+    background-color: rgba(40, 40, 50, 0.5) !important;
+    border-radius: 8px;
+    border: 1px solid #444;
+    font-style: italic;
+}
+
+/* --- FINAL, ROBUST CSS FOR THE CENTERED "BACK TO TOP" BUTTON --- */
+.footer {
+    position: fixed;
+    bottom: 30px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.back-to-top, .back-to-top:link, .back-to-top:visited {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    font-size: 20px; /* Controls the icon size */
+    color: #FFFFFF !important;
+    background-color: rgba(40, 40, 50, 0.8);
+    backdrop-filter: blur(5px);
+    border: 1px solid #555;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    opacity: 0.6;
+    pointer-events: auto;
+}
+
+.back-to-top:hover {
+    opacity: 1;
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    background-color: rgba(70, 70, 80, 0.9);
+    color: #FFFFFF !important;
+}

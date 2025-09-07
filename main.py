@@ -13,6 +13,7 @@ PROMPT_PATH = "./prompts/"
 OUTPUT_NDJSON_PATH = "./ndjson_prompt/"
 OUTPUT_NDJSON_FILE = "ndjson_prompts.json"
 THUMBNAIL_PATH = "./thumbnails/"
+UNIQUE_CONCEPT = 1
 
 def read_theme():
 
@@ -29,17 +30,17 @@ def read_theme():
 def main():
 
     # prompt_concept, initial_image_prompt, images = generate.run_generate_pipeline(theme = read_theme())
-    # filenames = save_display.run_save_and_display_pipeline(prompt_concept, initial_image_prompt, images)
-    upload.run_upload_pipeline(IMAGE_PATH, PROMPT_PATH, OUTPUT_NDJSON_PATH, OUTPUT_NDJSON_FILE, THUMBNAIL_PATH)
+    # save_display.run_save_and_display_pipeline(prompt_concept, initial_image_prompt, images)
+    # upload.run_upload_pipeline(IMAGE_PATH, PROMPT_PATH, OUTPUT_NDJSON_PATH, OUTPUT_NDJSON_FILE, THUMBNAIL_PATH)
 
     # Streamlit app
-    # command = [sys.executable, "-m", "streamlit", "run", "gallery.py"]
+    command = [sys.executable, "-m", "streamlit", "run", "gallery.py", "--", f"--unique_concept={UNIQUE_CONCEPT}"]
 
-    # print("Starting Streamlit app...")
-    # try:
-    #     subprocess.run(command, check = True)
-    # except subprocess.CalledProcessError as e:
-    #     print(f"Error running Streamlit app: {e}")
+    print("Starting Streamlit app...")
+    try:
+        subprocess.run(command, check = True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running Streamlit app: {e}")
 
 if __name__ == "__main__":
     main()
