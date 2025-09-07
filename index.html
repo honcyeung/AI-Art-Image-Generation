@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Artistry Pipeline - Project Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Deep Ocean & Teal -->
+    <!-- Application Structure Plan: The infographic follows a linear narrative flow, mirroring the data's journey through the ETL pipeline. It starts with the creative 'Genesis' (Theme & Prompting), moves to the technical 'Execution' (Generation & Cloud ETL), and ends with the 'Presentation' (Web App). This structure was chosen because it's the most logical way to explain a data pipeline's lifecycle to a technical recruiter, showing a clear start, middle, and end. Interactive elements like clickable flowchart nodes allow for exploration without disrupting the primary narrative. -->
+    <!-- Visualization & Content Choices:
+        - Architecture Diagram: Report Info -> Project Architecture -> Goal: Organize -> Viz: Flowchart (HTML/CSS) -> Interaction: Click to highlight stage description -> Justification: The most effective way to visualize a multi-step process for a technical audience.
+        - Tech Stack: Report Info -> Technologies Used -> Goal: Inform -> Viz: Icon Grid (HTML/CSS) -> Interaction: None -> Justification: A simple, scannable grid is the clearest way to present a tech stack.
+        - Creative Output: Report Info -> Generated Concepts -> Goal: Inform -> Viz: Interactive Text Block (JS) -> Interaction: Click button to cycle through examples -> Justification: An interactive list is more engaging than a static one.
+        - Technical Deep Dive: Report Info -> Prompt Engineering Strategy -> Goal: Explain -> Viz: Mini-flowchart (HTML/CSS) -> Interaction: None -> Justification: Visualizes the unique 'Alchemist' agent strategy, a key technical differentiator.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B1120; /* Deep Ocean: Dark Blue */
+            color: #E0E0E0; /* Light Gray for text */
+        }
+        .header-font {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .card {
+            background-color: #111827; /* Dark Gray-Blue */
+            border: 1px solid #374151; /* Gray */
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+            transform: translateY(-4px);
+            border-color: #06B6D4; /* Accent Cyan */
+        }
+        .flowchart-node {
+            border: 2px solid #4B5563; /* Gray */
+            background-color: #1F2937; /* Darker Gray-Blue */
+            cursor: pointer;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .flowchart-node.active {
+            border-color: #06B6D4; /* Accent Cyan */
+            background-color: #1E3A8A; /* Indigo */
+            color: #FFFFFF;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+        }
+        .tech-icon {
+            font-size: 3rem;
+            color: #9CA3AF; /* Lighter Gray */
+        }
+        .mini-flow-step {
+            background-color: #0B1120;
+            border: 1px solid #4B5563;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .mini-flow-arrow {
+            color: #6B7280;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <!-- Header Section -->
+        <header class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold header-font text-[#67E8F9]">AI Artistry Pipeline</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-300">An End-to-End Automated System for Generative Art</p>
+        </header>
+
+        <!-- Architecture Section -->
+        <section id="architecture" class="mb-12 md:mb-16">
+            <h2 class="text-3xl md:text-4xl header-font text-center mb-8 text-gray-100">Project Architecture</h2>
+            
+            <!-- NEW ROBUST FLOWCHART LAYOUT -->
+            <div id="flowchart" class="grid grid-cols-1 md:grid-cols-5 gap-6 text-sm md:text-base">
+                <div class="flowchart-node active" data-step="1">
+                    <div class="font-bold text-lg">①</div>
+                    <div>Creative Genesis</div>
+                </div>
+                <div class="flowchart-node" data-step="2">
+                    <div class="font-bold text-lg">②</div>
+                    <div>AI Generation</div>
+                </div>
+                <div class="flowchart-node" data-step="3">
+                    <div class="font-bold text-lg">③</div>
+                    <div>Cloud ETL</div>
+                </div>
+                <div class="flowchart-node" data-step="4">
+                    <div class="font-bold text-lg">④</div>
+                    <div>Data Warehouse</div>
+                </div>
+                <div class="flowchart-node" data-step="5">
+                    <div class="font-bold text-lg">⑤</div>
+                    <div>Presentation</div>
+                </div>
+            </div>
+
+            <!-- Description Box -->
+            <div id="flowchart-description" class="mt-8 p-6 card">
+                <h3 id="step-title" class="text-xl font-bold header-font text-cyan-400 mb-2"></h3>
+                <p id="step-text" class="text-gray-300"></p>
+            </div>
+        </section>
+        
+        <!-- Tech Stack Section -->
+        <section id="tech-stack" class="mb-12 md:mb-16">
+            <h2 class="text-3xl md:text-4xl header-font text-center mb-8 text-gray-100">Technology Stack</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 text-center">
+                <div class="flex flex-col items-center"><div class="tech-icon">☁️</div><span class="mt-2 font-semibold">GCP</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">🗃️</div><span class="mt-2 font-semibold">BigQuery</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">📦</div><span class="mt-2 font-semibold">GCS</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">🧠</div><span class="mt-2 font-semibold">Gemini API</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">🐍</div><span class="mt-2 font-semibold">Python</span></div>
+                <div class="flex flex-col items-center"><div class="tech-icon">📊</div><span class="mt-2 font-semibold">Streamlit</span></div>
+            </div>
+        </section>
+
+        <!-- Details Section -->
+        <section id="details" class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 md:mt-16">
+            <!-- Technical Deep Dive Card -->
+            <div class="card p-6 flex flex-col">
+                <h3 class="text-2xl header-font mb-4 text-gray-100 text-center">Technical Deep Dive</h3>
+                <p class="text-gray-400 mb-6 text-center">The core of this project is the **'Alchemist' Agent**, a custom multi-stage prompting strategy designed to ensure originality.</p>
+                <div class="space-y-4">
+                    <div class="mini-flow-step">1. Purification: Identify & avoid clichés for the master theme.</div>
+                    <div class="text-center mini-flow-arrow text-2xl">↓</div>
+                    <div class="mini-flow-step">2. Catalyst: Secretly fuse the theme with a random, unrelated concept.</div>
+                     <div class="text-center mini-flow-arrow text-2xl">↓</div>
+                    <div class="mini-flow-step">3. Transmutation: Generate a structured JSON output with the new, hybrid prompt and creative reasoning.</div>
+                </div>
+                 <p class="text-gray-300 mt-6 text-sm">This method systematically prevents repetitive or generic outputs, ensuring every generated concept is novel and imaginative.</p>
+            </div>
+
+            <!-- Creative Output Card -->
+            <div class="card p-6 flex flex-col">
+                <h3 class="text-2xl header-font mb-4 text-gray-100 text-center">Creative Output</h3>
+                <p class="text-gray-400 mb-4 text-center">Example concepts generated by 'The Alchemist' from the "Nocturne & Mechanism" theme.</p>
+                <div class="flex-grow p-6 bg-gray-900 border border-gray-700 rounded-lg flex items-center justify-center text-center min-h-[100px]">
+                    <p id="concept-display" class="text-2xl font-semibold text-cyan-400"></p>
+                </div>
+                <button id="shuffle-concept-btn" class="mt-4 w-full bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors">
+                    Generate New Concept
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const stepDescriptions = {
+                1: { title: 'Step 1: Creative Genesis', text: 'The pipeline begins by prompting a powerful LLM agent ("The Alchemist") with a master theme. The agent generates a unique two-word concept and enhances it into a detailed, structured JSON object containing a final prompt and creative reasoning.' },
+                2: { title: 'Step 2: AI Image Generation', text: 'The structured final prompt is sent to the Gemini Imagen model, which generates a pair of high-resolution, thematically consistent art pieces. The output is a set of raw image bytes and metadata.' },
+                3: { title: 'Step 3: Cloud ETL', text: 'A Python script processes the generated assets. It creates high-quality thumbnails, consolidates JSON metadata into an optimized NDJSON file, and uploads all assets (images, thumbnails, JSON) to specific folders in Google Cloud Storage.' },
+                4: { title: 'Step 4: Data Warehousing', text: 'The staged NDJSON file in GCS is loaded into a primary BigQuery table. A final, enriched table is then created, containing public URLs to all GCS assets. This table serves as the single source of truth for the web app.' },
+                5: { title: 'Step 5: Presentation Layer', text: 'A multi-page Streamlit application queries the final BigQuery table to get all metadata. It dynamically displays a shuffled gallery of thumbnails, which link to detail pages showing the full-size art and the AI\'s creative process.' }
+            };
+
+            const flowchartNodes = document.querySelectorAll('.flowchart-node');
+            const stepTitleEl = document.getElementById('step-title');
+            const stepTextEl = document.getElementById('step-text');
+
+            function updateDescription(step) {
+                flowchartNodes.forEach(node => node.classList.toggle('active', node.dataset.step === step));
+                const content = stepDescriptions[step];
+                stepTitleEl.textContent = content.title;
+                stepTextEl.textContent = content.text;
+            }
+
+            flowchartNodes.forEach(node => node.addEventListener('click', () => updateDescription(node.dataset.step)));
+            updateDescription('1');
+
+            const concepts = ['Quantum Weave', 'Nocturnal Cogs', 'Celestial Loom', 'Dream Regulator', 'Probability Engine', 'Ephemeral Citadel'];
+            const conceptDisplayEl = document.getElementById('concept-display');
+            const shuffleConceptBtn = document.getElementById('shuffle-concept-btn');
+            
+            function shuffleConcept() {
+                const randomIndex = Math.floor(Math.random() * concepts.length);
+                conceptDisplayEl.textContent = `"${concepts[randomIndex]}"`;
+            }
+
+            shuffleConceptBtn.addEventListener('click', shuffleConcept);
+            shuffleConcept();
+        });
+    </script>
+</body>
+</html>
+
